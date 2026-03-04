@@ -1,0 +1,13 @@
+{
+  "name": "codex-voice",
+  "version": "1.0.0",
+  "description": "Auto-voice Russian Codex CLI responses with meme voices",
+  "scripts": {
+    "setup": "node setup.js",
+    "clone": "node clone_voices.js"
+  },
+  "dependencies": {
+    "@ffmpeg-installer/ffmpeg": "^1.1.0",
+    "msedge-tts": "^1.3.4"
+  }
+}

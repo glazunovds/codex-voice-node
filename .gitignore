@@ -1,0 +1,6 @@
+.env
+node_modules/
+voice.pid
+voice.stop
+voice.mute
+samples/древнийрус*

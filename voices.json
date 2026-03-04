@@ -1,0 +1,27 @@
+{
+  "bagirov": {
+    "voice_id": "rtSfzRWY6otHrMu8PVKL",
+    "name": "Радислав Багиров",
+    "context": "default"
+  },
+  "droceslav": {
+    "voice_id": "Hwqeozmcwel5WVw6bDzy",
+    "name": "Дрочеслав сын Сергея",
+    "context": "battle"
+  },
+  "vseslav": {
+    "voice_id": "qihTfTi70gC8XfmtzCAW",
+    "name": "Всеслав Чародей",
+    "context": "magic"
+  },
+  "hitriy_yashcher": {
+    "voice_id": "zLdHd55EleAb9U3PkGRZ",
+    "name": "Хитрый Ящер",
+    "context": "error"
+  },
+  "podliy_yashcher": {
+    "voice_id": "xF2QTww39o9hS6a6jkBo",
+    "name": "Подлый Ящер",
+    "context": "sneaky"
+  }
+}
