@@ -226,14 +226,21 @@ function playAudio(filePath) {
   const absPath = path.resolve(filePath).replace(/\\/g, "/");
   if (process.platform === "win32") {
     const vol = Math.round(VOLUME * 1000);
-    const ps = `
-      Add-Type -Namespace WinMM -Name MCI -MemberDefinition '[DllImport("winmm.dll", CharSet=CharSet.Unicode)] public static extern int mciSendStringW(string cmd, System.Text.StringBuilder ret, int retLen, IntPtr hwnd);'
-      [WinMM.MCI]::mciSendStringW('open "${absPath}" type mpegvideo alias cv', $null, 0, [IntPtr]::Zero)
-      [WinMM.MCI]::mciSendStringW('setaudio cv volume to ${vol}', $null, 0, [IntPtr]::Zero)
-      [WinMM.MCI]::mciSendStringW('play cv wait', $null, 0, [IntPtr]::Zero)
-      [WinMM.MCI]::mciSendStringW('close cv', $null, 0, [IntPtr]::Zero)
-    `.trim();
-    execSync(`powershell -NoProfile -Command "${ps.replace(/\n/g, "; ")}"`, { stdio: "pipe" });
+    const alias = `cv${Date.now()}`;
+    const ps1 = path.join(os.tmpdir(), `cv_play_${Date.now()}.ps1`);
+    fs.writeFileSync(ps1, [
+      `Add-Type -Namespace WinMM -Name MCI${Date.now()} -MemberDefinition '[DllImport("winmm.dll", CharSet=CharSet.Unicode)] public static extern int mciSendStringW(string cmd, System.Text.StringBuilder ret, int retLen, IntPtr hwnd);'`,
+      `$t = [WinMM.MCI${Date.now()}]`,
+      `$t::mciSendStringW('open "${absPath}" type mpegvideo alias ${alias}', $null, 0, [IntPtr]::Zero)`,
+      `$t::mciSendStringW('setaudio ${alias} volume to ${vol}', $null, 0, [IntPtr]::Zero)`,
+      `$t::mciSendStringW('play ${alias} wait', $null, 0, [IntPtr]::Zero)`,
+      `$t::mciSendStringW('close ${alias}', $null, 0, [IntPtr]::Zero)`,
+    ].join("\n"), "utf-8");
+    try {
+      execSync(`powershell -NoProfile -ExecutionPolicy Bypass -File "${ps1}"`, { stdio: "pipe" });
+    } finally {
+      try { fs.unlinkSync(ps1); } catch {}
+    }
   } else {
     const volPct = Math.round(VOLUME * 100);
     const players = [
